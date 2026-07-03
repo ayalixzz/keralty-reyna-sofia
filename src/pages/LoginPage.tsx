@@ -24,10 +24,7 @@ export function LoginPage() {
       await cargarPerfil()
       navigate('/dashboard', { replace: true })
     } catch (err) {
-      // Si la API falla por desconexión en desarrollo, iniciamos sesión con el mock
-      console.warn('Conexión de Supabase no disponible. Usando sesión mock de prueba.', err)
-      await cargarPerfil()
-      navigate('/dashboard', { replace: true })
+      setError(err instanceof Error ? err.message : 'No se pudo iniciar sesión')
     } finally {
       setCargando(false)
     }

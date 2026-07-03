@@ -7,7 +7,8 @@
     "strict": true,
     "noEmit": true,
     "types": ["node"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["scripts"]
+  "include": ["scripts", "supabase/functions/_shared"]
 }

@@ -86,6 +86,7 @@ interface FilaVistaPublica {
   sede_nombre: string | null
   sede_ciudad: string | null
   sede_direccion: string | null
+  drive_folder_id: string | null
 }
 
 export async function getEquipoPublicoPorSerie(serie: string): Promise<EquipoPublico | null> {

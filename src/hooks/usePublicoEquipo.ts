@@ -26,6 +26,7 @@ function mockAPublico(serie: string): EquipoPublico | null {
     estado: eq.estado,
     area: eq.area,
     ubicacion_detalle: eq.ubicacion_detalle,
+    drive_folder_id: eq.drive_folder_id,
     sede: eq.sede ? { nombre: eq.sede.nombre, ciudad: eq.sede.ciudad, direccion: eq.sede.direccion } : undefined,
     documentos: (MOCK_DOCUMENTOS[eq.id] ?? []).map((d) => ({
       id: d.id,

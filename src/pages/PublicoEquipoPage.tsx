@@ -5,8 +5,10 @@ import {
 } from 'lucide-react'
 import { usePublicoEquipo } from '@/hooks/usePublicoEquipo'
 import { PageSpinner } from '@/components/ui/Spinner'
+import { Button } from '@/components/ui/Button'
 import { BadgeEstadoEquipo, BadgeRiesgo } from '@/components/ui/Badge'
 import { formatFecha, calcularEstadoAlerta } from '@/utils/date.utils'
+import { buildDriveUrl } from '@/utils/drive.utils'
 import { BadgeEstadoAlerta } from '@/components/ui/Badge'
 
 export function PublicoEquipoPage() {
@@ -122,9 +124,18 @@ export function PublicoEquipoPage() {
                 </div>
 
                 {!equipo.documentos || equipo.documentos.length === 0 ? (
-                  <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-                    Aún no hay documentos indexados para este equipo.
-                  </p>
+                  <div>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)', marginBottom: equipo.drive_folder_id ? '0.75rem' : 0 }}>
+                      Aún no hay documentos indexados individualmente para este equipo.
+                    </p>
+                    {equipo.drive_folder_id && (
+                      <a href={buildDriveUrl(equipo.drive_folder_id) ?? undefined} target="_blank" rel="noopener noreferrer">
+                        <Button variant="secondary" icon={<ExternalLink size={14} />}>
+                          Abrir carpeta completa en Drive
+                        </Button>
+                      </a>
+                    )}
+                  </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     {equipo.documentos.map((doc) => {

@@ -122,6 +122,7 @@ export interface EquipoPublico {
   estado: EstadoEquipo
   area: string | null
   ubicacion_detalle: string | null
+  drive_folder_id: string | null
   sede?: Pick<Sede, 'nombre' | 'ciudad' | 'direccion'>
   documentos?: DocumentoPublico[]
 }

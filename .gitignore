@@ -20,6 +20,9 @@ dist-ssr
 # Reportes generados por scripts/import-excel.ts
 import-excel-omitidas.csv
 
+# Cache local de la Supabase CLI
+supabase/.temp
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
