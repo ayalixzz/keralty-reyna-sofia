@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import {
   Stethoscope, MapPin, Building2, FileText, ExternalLink,
-  AlertTriangle, ShieldCheck,
+  AlertTriangle, ShieldCheck, Archive,
 } from 'lucide-react'
 import { usePublicoEquipo } from '@/hooks/usePublicoEquipo'
 import { PageSpinner } from '@/components/ui/Spinner'
@@ -115,6 +115,21 @@ export function PublicoEquipoPage() {
                   {equipo.sede?.ciudad && ` · ${equipo.sede.ciudad}`}
                 </div>
               </div>
+
+              {/* Ubicación física de la documentación en papel (archivo/sótano/sección) */}
+              {equipo.ubicacion_documentacion_fisica && (
+                <div className="card" style={{ borderLeft: '3px solid var(--color-keralty-600)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <Archive size={16} style={{ color: 'var(--color-keralty-600)' }} />
+                    <span style={{ fontSize: '0.8125rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-text-muted)' }}>
+                      Archivo físico de la documentación
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '1.0625rem', fontWeight: 600 }}>
+                    {equipo.ubicacion_documentacion_fisica}
+                  </p>
+                </div>
+              )}
 
               {/* Documentación */}
               <div className="card">

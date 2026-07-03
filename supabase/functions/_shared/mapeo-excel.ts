@@ -24,6 +24,7 @@ export const COL = {
   ENE: 82, // ...DIC = 93
   EJECUTOR: 97, FECHA_CALIBRACION: 99,
   OBSERVACIONES_1: 107, OBSERVACIONES_2: 108,
+  UBICACION_DOCUMENTACION: 116,
 } as const
 
 export const MESES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC']
@@ -181,6 +182,7 @@ export function procesarFilas(dataRows: unknown[][]): ResultadoProcesamiento {
       drive_folder_id: extraerDriveFolderId(clean(row[COL.DRIVE])),
       novedades_doc: observaciones,
       checklist_mantenimiento: checklist,
+      ubicacion_documentacion_fisica: clean(row[COL.UBICACION_DOCUMENTACION]) || null,
     }
 
     const fechaCalibracion = toISODate(row[COL.FECHA_CALIBRACION])

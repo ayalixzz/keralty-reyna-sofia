@@ -36,13 +36,7 @@ export function useAlertas(diasAnticipacion = 30) {
 
     getAlertas(diasAnticipacion)
       .then((data) => {
-        if (!cancelado) {
-          if (data && data.length > 0) {
-            setAlertas(data as Alerta[])
-          } else {
-            setAlertas(MOCK_ALERTAS)
-          }
-        }
+        if (!cancelado) setAlertas((data ?? []) as Alerta[])
       })
       .catch((err: unknown) => {
         if (!cancelado) {

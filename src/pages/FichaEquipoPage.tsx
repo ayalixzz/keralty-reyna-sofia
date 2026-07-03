@@ -214,6 +214,7 @@ export function FichaEquipoPage() {
             <Field label="Área"      value={equipo.area} />
             <Field label="Ubicación" value={equipo.ubicacion_detalle} />
             <Field label="Responsable biomédico" value={equipo.responsable_biomedico} />
+            <Field label="Documentación física (archivo)" value={equipo.ubicacion_documentacion_fisica} mostrarVacio />
           </Fields>
         </div>
 
@@ -449,8 +450,10 @@ function Fields({ children }: { children: React.ReactNode }) {
   return <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>{children}</div>
 }
 
-function Field({ label, value, mono = false }: { label: string; value?: string | null; mono?: boolean }) {
-  if (!value) return null
+function Field({
+  label, value, mono = false, mostrarVacio = false,
+}: { label: string; value?: string | null; mono?: boolean; mostrarVacio?: boolean }) {
+  if (!value && !mostrarVacio) return null
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
       <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>{label}</span>
@@ -458,10 +461,11 @@ function Field({ label, value, mono = false }: { label: string; value?: string |
         style={{
           fontSize: '0.875rem', fontWeight: 500, textAlign: 'right',
           fontFamily: mono ? 'monospace' : undefined,
-          color: mono ? 'var(--color-keralty-700)' : undefined,
+          color: !value ? 'var(--color-text-soft)' : mono ? 'var(--color-keralty-700)' : undefined,
+          fontStyle: !value ? 'italic' : undefined,
         }}
       >
-        {value}
+        {value || 'Sin registrar'}
       </span>
     </div>
   )

@@ -55,6 +55,7 @@ export interface Equipo {
   sede_id: string
   area: string | null
   ubicacion_detalle: string | null
+  ubicacion_documentacion_fisica: string | null
   responsable_biomedico: string | null
   estado: EstadoEquipo
   drive_folder_id: string | null
@@ -122,6 +123,7 @@ export interface EquipoPublico {
   estado: EstadoEquipo
   area: string | null
   ubicacion_detalle: string | null
+  ubicacion_documentacion_fisica: string | null
   drive_folder_id: string | null
   sede?: Pick<Sede, 'nombre' | 'ciudad' | 'direccion'>
   documentos?: DocumentoPublico[]

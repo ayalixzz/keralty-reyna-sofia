@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import {
   Activity, AlertTriangle, CheckCircle, Clock,
   Package, Building2, TrendingUp,
@@ -8,7 +7,7 @@ import {
   PieChart, Pie, Cell, Legend,
 } from 'recharts'
 import { useAlertas } from '@/hooks/useAlertas'
-import { useEquipos } from '@/hooks/useEquipos'
+import { useDashboardStats } from '@/hooks/useDashboardStats'
 import { BadgeEstadoAlerta } from '@/components/ui/Badge'
 import { PageSpinner } from '@/components/ui/Spinner'
 import { formatFecha, diasHastaVencimiento } from '@/utils/date.utils'
@@ -22,40 +21,20 @@ const COLORES_PROPIEDAD = {
 
 export function DashboardPage() {
   const navigate = useNavigate()
-  const { equipos, cargando: cargandoEq } = useEquipos()
+  const { stats, cargando: cargandoStats } = useDashboardStats()
   const { alertas, vencidas, porVencer, cargando: cargandoAl } = useAlertas(60)
 
-  const stats = useMemo(() => {
-    const total = equipos.length
-    const porPropiedad = {
-      propio:    equipos.filter((e) => e.propiedad === 'propio').length,
-      contrato:  equipos.filter((e) => e.propiedad === 'contrato').length,
-      proveedor: equipos.filter((e) => e.propiedad === 'proveedor').length,
-    }
-    const activos    = equipos.filter((e) => e.estado === 'activo').length
-    const mantenim   = equipos.filter((e) => e.estado === 'en_mantenimiento').length
-    const baja       = equipos.filter((e) => e.estado === 'dado_de_baja').length
+  if (cargandoStats || cargandoAl) return <PageSpinner />
 
-    // Por sede
-    const sedeMap: Record<string, number> = {}
-    for (const eq of equipos) {
-      const nombre = eq.sede?.nombre ?? 'Sin sede'
-      sedeMap[nombre] = (sedeMap[nombre] ?? 0) + 1
-    }
-    const porSede = Object.entries(sedeMap)
-      .map(([sede, total]) => ({ sede: sede.replace('Clínica ', '').slice(0, 20), total }))
-      .sort((a, b) => b.total - a.total)
-      .slice(0, 8)
-
-    return { total, porPropiedad, activos, mantenim, baja, porSede }
-  }, [equipos])
-
-  if (cargandoEq || cargandoAl) return <PageSpinner />
+  const porSedeGrafica = stats.por_sede.map((s) => ({
+    sede: s.sede.replace('CLÍNICA ', '').replace('CLINICA ', '').slice(0, 20),
+    total: s.total,
+  }))
 
   const pieData = [
-    { name: 'Propio', value: stats.porPropiedad.propio,    fill: COLORES_PROPIEDAD.propio },
-    { name: 'Contrato', value: stats.porPropiedad.contrato, fill: COLORES_PROPIEDAD.contrato },
-    { name: 'Proveedor', value: stats.porPropiedad.proveedor, fill: COLORES_PROPIEDAD.proveedor },
+    { name: 'Propio', value: stats.propio,    fill: COLORES_PROPIEDAD.propio },
+    { name: 'Contrato', value: stats.contrato, fill: COLORES_PROPIEDAD.contrato },
+    { name: 'Proveedor', value: stats.proveedor, fill: COLORES_PROPIEDAD.proveedor },
   ].filter((d) => d.value > 0)
 
   return (
@@ -84,7 +63,7 @@ export function DashboardPage() {
         />
         <StatCard
           label="En mantenimiento"
-          value={stats.mantenim}
+          value={stats.en_mantenimiento}
           icon={<Clock size={22} />}
           color="var(--color-warning-400)"
         />
@@ -103,7 +82,7 @@ export function DashboardPage() {
         />
         <StatCard
           label="Sedes"
-          value={stats.porSede.length}
+          value={stats.sedes_total}
           icon={<Building2 size={22} />}
           color="var(--color-keralty-600)"
         />
@@ -148,7 +127,7 @@ export function DashboardPage() {
             Equipos por sede (top 8)
           </h3>
           <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={stats.porSede} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+            <BarChart data={porSedeGrafica} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
               <XAxis
                 dataKey="sede"
                 tick={{ fill: 'var(--color-text-muted)', fontSize: 11 }}

@@ -29,6 +29,7 @@ const MOCK_EQUIPOS: Equipo[] = [
     sede_id: 'sede-1',
     area: 'MEDICINA NUCLEAR',
     ubicacion_detalle: 'Consultorio 102',
+    ubicacion_documentacion_fisica: 'Archivo central · Sótano 1 · Sección A3',
     responsable_biomedico: 'Ing. Carlos Mendoza',
     estado: 'activo',
     drive_folder_id: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs',
@@ -62,6 +63,7 @@ const MOCK_EQUIPOS: Equipo[] = [
     sede_id: 'sede-2',
     area: 'LABORATORIO CLÍNICO',
     ubicacion_detalle: 'Área de Hematología',
+    ubicacion_documentacion_fisica: 'Archivo central · Sótano 1 · Sección B1',
     responsable_biomedico: 'Ing. Sandra Restrepo',
     estado: 'activo',
     drive_folder_id: '1CxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs',
@@ -95,6 +97,7 @@ const MOCK_EQUIPOS: Equipo[] = [
     sede_id: 'sede-1',
     area: 'TRANSFUSIÓN',
     ubicacion_detalle: 'Banco de Sangre',
+    ubicacion_documentacion_fisica: null,
     responsable_biomedico: 'Ing. Carlos Mendoza',
     estado: 'en_mantenimiento',
     drive_folder_id: '1DxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs',
@@ -121,29 +124,8 @@ export function useEquipos(filtrosIniciales: FiltrosEquipo = {}) {
     setError(null)
     try {
       const { data, total } = await buscarEquipos(f, { pagina, porPagina: POR_PAGINA })
-      if (data && data.length > 0) {
-        setEquipos(data)
-        setPaginacion((prev) => ({ ...prev, total, pagina }))
-      } else {
-        // Fallback a Mock data en local/desarrollo si no hay BD configurada o conectada
-        let mockFiltered = [...MOCK_EQUIPOS]
-        if (f.busqueda) {
-          const term = f.busqueda.toLowerCase()
-          mockFiltered = mockFiltered.filter(
-            (e) =>
-              e.nombre.toLowerCase().includes(term) ||
-              e.serie.toLowerCase().includes(term) ||
-              e.codigo_institucional?.toLowerCase().includes(term)
-          )
-        }
-        if (f.sede_id) mockFiltered = mockFiltered.filter((e) => e.sede_id === f.sede_id)
-        if (f.propiedad) mockFiltered = mockFiltered.filter((e) => e.propiedad === f.propiedad)
-        if (f.estado) mockFiltered = mockFiltered.filter((e) => e.estado === f.estado)
-        if (f.clasificacion_riesgo) mockFiltered = mockFiltered.filter((e) => e.clasificacion_riesgo === f.clasificacion_riesgo)
-
-        setEquipos(mockFiltered)
-        setPaginacion({ pagina: 1, porPagina: POR_PAGINA, total: mockFiltered.length })
-      }
+      setEquipos(data ?? [])
+      setPaginacion((prev) => ({ ...prev, total, pagina }))
     } catch (e) {
       // Fallback si hay error de conexión a Supabase
       let mockFiltered = [...MOCK_EQUIPOS]

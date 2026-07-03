@@ -87,6 +87,7 @@ interface FilaVistaPublica {
   sede_ciudad: string | null
   sede_direccion: string | null
   drive_folder_id: string | null
+  ubicacion_documentacion_fisica: string | null
 }
 
 export async function getEquipoPublicoPorSerie(serie: string): Promise<EquipoPublico | null> {
@@ -147,13 +148,25 @@ export async function actualizarEquipo(id: string, payload: EquipoUpdate): Promi
   return data as Equipo
 }
 
-/* ── Estadísticas para el dashboard ── */
+/* ── Estadísticas para el dashboard ──
+ * Agregado en el servidor (función get_dashboard_stats) para no traer todo
+ * el inventario al cliente solo para contarlo — ver supabase/migrations/0003.
+ */
 
-export async function getEquiposStats() {
-  const { data, error } = await supabase
-    .from(TABLE)
-    .select('propiedad, estado, sede_id, sede:sedes(nombre)')
+export interface DashboardStatsRPC {
+  total: number
+  activos: number
+  en_mantenimiento: number
+  dado_de_baja: number
+  propio: number
+  contrato: number
+  proveedor: number
+  sedes_total: number
+  por_sede: { sede: string; total: number }[]
+}
 
+export async function getDashboardStats(): Promise<DashboardStatsRPC> {
+  const { data, error } = await supabase.rpc('get_dashboard_stats')
   if (error) throw new Error(error.message)
-  return data ?? []
+  return data as DashboardStatsRPC
 }
