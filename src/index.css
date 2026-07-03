@@ -1,0 +1,483 @@
+/* =============================================================
+   KERALTY MEDTRACK — Design System
+   Tailwind v4 CSS (sin config JS, tokens en @theme)
+   Tema: claro clínico con sidebar de marca oscuro
+   ============================================================= */
+
+@import "tailwindcss";
+
+@theme {
+  /* ── Paleta corporativa (acento, funciona sobre claro y oscuro) ── */
+  --color-keralty-50:  #eef6ff;
+  --color-keralty-100: #daeeff;
+  --color-keralty-200: #bddfff;
+  --color-keralty-300: #90c9ff;
+  --color-keralty-400: #5babff;
+  --color-keralty-500: #3489f5;
+  --color-keralty-600: #1d6aea;
+  --color-keralty-700: #1554cf;
+  --color-keralty-800: #1744a8;
+  --color-keralty-900: #193d85;
+  --color-keralty-950: #0f2451;
+
+  /* ── Superficies (tema claro) ── */
+  --color-surface-900: #eef1f6;  /* fondo de página */
+  --color-surface-800: #ffffff;  /* cards, paneles */
+  --color-surface-700: #e4e9f0;  /* bordes sutiles */
+  --color-surface-600: #d3dae4;  /* bordes marcados / divisores */
+  --color-surface-500: #64748b;  /* texto secundario */
+  --color-surface-400: #94a3b8;  /* texto terciario / placeholders */
+
+  /* ── Texto ── */
+  --color-text:        #101828;
+  --color-text-muted:  #64748b;
+  --color-text-soft:   #94a3b8;
+
+  /* ── Sidebar (siempre oscuro — identidad de marca) ── */
+  --color-sidebar-bg:        #0f1b3d;
+  --color-sidebar-border:    rgba(255,255,255,0.08);
+  --color-sidebar-hover:     rgba(255,255,255,0.06);
+  --color-sidebar-active-bg: rgba(91,171,255,0.16);
+  --color-sidebar-active-border: rgba(91,171,255,0.28);
+  --color-sidebar-text:       #f1f5fb;
+  --color-sidebar-text-muted: #93a8cc;
+
+  /* ── Estados semánticos (legibles sobre claro y oscuro) ── */
+  --color-success-400: #16a34a;
+  --color-success-500: #15803d;
+  --color-warning-400: #d97706;
+  --color-warning-500: #b45309;
+  --color-danger-400:  #dc2626;
+  --color-danger-500:  #b91c1c;
+
+  /* ── Tipografía ── */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── Radios ── */
+  --radius-card: 12px;
+  --radius-btn:  8px;
+
+  /* ── Easing personalizado (emil-design-eng) ── */
+  --ease-out-strong:  cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-ui:   cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* ── Base ── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-surface-900);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-keralty-200);
+    color: var(--color-keralty-950);
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--color-surface-900); }
+  ::-webkit-scrollbar-thumb { background: var(--color-surface-600); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-surface-500); }
+}
+
+/* ── Componentes reutilizables ── */
+@layer components {
+
+  /* ─── Card (elevación suave sobre fondo claro) ─── */
+  .card {
+    background: var(--color-surface-800);
+    border: 1px solid var(--color-surface-700);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+  }
+  .card-hover {
+    transition:
+      border-color 150ms var(--ease-out-strong),
+      box-shadow   150ms var(--ease-out-strong);
+  }
+  .card-hover:hover {
+    border-color: var(--color-keralty-300);
+    box-shadow:
+      0 0 0 1px var(--color-keralty-300),
+      0 4px 16px rgba(29,106,234,0.10);
+  }
+
+  /* ─── Botones ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: var(--radius-btn);
+    border: 1px solid transparent;
+    cursor: pointer;
+    /* Animar solo las propiedades necesarias, no `all` (emil-design-eng) */
+    transition:
+      background-color 140ms var(--ease-out-strong),
+      border-color     140ms var(--ease-out-strong),
+      color            140ms var(--ease-out-strong),
+      transform        100ms var(--ease-out-strong),
+      opacity          140ms var(--ease-out-strong);
+    white-space: nowrap;
+    user-select: none;
+  }
+  /* Feedback táctil en pulsación (emil-design-eng: buttons must feel responsive) */
+  .btn:active:not(:disabled) { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-primary {
+    background-color: var(--color-keralty-600);
+    color: #fff;
+    border-color: var(--color-keralty-600);
+  }
+  .btn-primary:hover:not(:disabled) { background-color: var(--color-keralty-700); }
+
+  .btn-secondary {
+    background-color: var(--color-surface-800);
+    color: var(--color-text);
+    border-color: var(--color-surface-600);
+  }
+  .btn-secondary:hover:not(:disabled) { background-color: var(--color-surface-900); }
+
+  .btn-danger {
+    background-color: var(--color-danger-500);
+    color: #fff;
+  }
+  .btn-danger:hover:not(:disabled) { background-color: #991b1b; }
+
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--color-text-muted);
+    border-color: transparent;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: var(--color-surface-900);
+    color: var(--color-text);
+  }
+
+  .btn-sm   { padding: 0.25rem 0.625rem; font-size: 0.8125rem; }
+  .btn-lg   { padding: 0.75rem 1.5rem;   font-size: 1rem; }
+  .btn-icon { padding: 0.5rem; }
+  .btn-full { width: 100%; justify-content: center; }
+
+  /* ─── Inputs ─── */
+  .input {
+    width: 100%;
+    background: var(--color-surface-900);
+    border: 1px solid var(--color-surface-600);
+    border-radius: var(--radius-btn);
+    color: var(--color-text);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    outline: none;
+    transition:
+      border-color 140ms var(--ease-out-strong),
+      box-shadow   140ms var(--ease-out-strong);
+  }
+  .input::placeholder { color: var(--color-text-soft); }
+  .input:focus {
+    border-color: var(--color-keralty-500);
+    box-shadow: 0 0 0 3px rgba(52,137,245,0.15);
+  }
+  /* Estado de error con borde rojo */
+  .input-error {
+    border-color: var(--color-danger-400) !important;
+    box-shadow: 0 0 0 3px rgba(220,38,38,0.12) !important;
+  }
+  .input-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: 0.375rem;
+  }
+  .input-hint { font-size: 0.75rem; color: var(--color-text-soft); }
+
+  /* ─── Badges ─── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    /* Monospace para claves de clasificación (minimalist-skill) */
+    font-variant-numeric: tabular-nums;
+  }
+  .badge-green  { background: rgba(22,163,74,0.12);  color: var(--color-success-500); }
+  .badge-yellow { background: rgba(217,119,6,0.12);  color: var(--color-warning-500); }
+  .badge-red    { background: rgba(220,38,38,0.12);  color: var(--color-danger-500); }
+  .badge-blue   { background: rgba(52,137,245,0.12); color: var(--color-keralty-700); }
+  .badge-gray   { background: rgba(100,116,139,0.12);color: var(--color-text-muted); }
+
+  /* ─── Tabla de datos ─── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .data-table thead tr {
+    border-bottom: 1px solid var(--color-surface-600);
+    background: var(--color-surface-900);
+  }
+  .data-table th {
+    padding: 0.625rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .data-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-surface-700);
+    vertical-align: middle;
+  }
+  .data-table tbody tr {
+    transition: background-color 100ms var(--ease-out-strong);
+  }
+  .data-table tbody tr:hover { background: var(--color-surface-900); }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+
+  /* Monospace para series / códigos / números (minimalist-skill + taste-skill) */
+  .data-mono {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-keralty-700);
+    letter-spacing: 0.01em;
+  }
+
+  /* ─── Sidebar (marca oscura fija, independiente del tema claro) ─── */
+  .sidebar {
+    background: var(--color-sidebar-bg);
+    border-right: 1px solid var(--color-sidebar-border);
+    box-shadow: inset -1px 0 0 rgba(255,255,255,0.03);
+    width: 240px;
+    flex-shrink: 0;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    color: var(--color-sidebar-text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      background-color 120ms var(--ease-out-strong),
+      color            120ms var(--ease-out-strong);
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+  }
+  .nav-item:hover { background: var(--color-sidebar-hover); color: var(--color-sidebar-text); }
+  .nav-item.active {
+    background: var(--color-sidebar-active-bg);
+    color: var(--color-keralty-300);
+    border: 1px solid var(--color-sidebar-active-border);
+    box-shadow: inset 0 1px 0 rgba(91,171,255,0.08);
+  }
+
+  /* ─── Stat card (con hover elevation — soft-skill) ─── */
+  .stat-card {
+    background: var(--color-surface-800);
+    border: 1px solid var(--color-surface-700);
+    border-radius: var(--radius-card);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+    transition:
+      border-color 150ms var(--ease-out-strong),
+      box-shadow   150ms var(--ease-out-strong),
+      transform    150ms var(--ease-out-strong);
+  }
+  .stat-card:hover {
+    border-color: var(--color-surface-600);
+    box-shadow: 0 6px 16px rgba(16,24,40,0.08);
+    transform: translateY(-1px);
+  }
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono);
+  }
+  .stat-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  /* ─── Alert banner ─── */
+  .alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border-left: 3px solid;
+    transition:
+      background-color 120ms var(--ease-out-strong),
+      transform        120ms var(--ease-out-strong);
+  }
+  .alert-item:hover { transform: translateX(2px); }
+  .alert-vencida    { background: rgba(220,38,38,0.06);  border-color: var(--color-danger-400); }
+  .alert-por_vencer { background: rgba(217,119,6,0.07);  border-color: var(--color-warning-400); }
+  .alert-vigente    { background: rgba(22,163,74,0.06);  border-color: var(--color-success-400); }
+
+  /* ─── Separador de sección (uso: sidebar) ─── */
+  .section-title {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-sidebar-text-muted);
+    opacity: 0.75;
+    padding: 0 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  /* ─── Spinner (más rápido = percepción de velocidad — emil-design-eng) ─── */
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--color-surface-600);
+    border-top-color: var(--color-keralty-500);
+    border-radius: 50%;
+    animation: spin 0.5s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── Modal (animación mejorada — scale desde 0.95, no 0) ─── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(16,24,40,0.5);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 50;
+    padding: 1rem;
+    animation: overlayIn 150ms var(--ease-out-strong);
+  }
+  @keyframes overlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .modal-panel {
+    background: var(--color-surface-800);
+    border: 1px solid var(--color-surface-700);
+    box-shadow: 0 24px 48px rgba(16,24,40,0.18);
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    /* Nunca animar desde scale(0) — real-world physics (emil-design-eng) */
+    animation: modalIn 220ms var(--ease-out-strong);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0); }
+  }
+
+  /* ─── Pantalla completa de carga ─── */
+  .fullpage-spinner {
+    position: fixed; inset: 0;
+    background: var(--color-surface-900);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+  }
+
+  /* ─── Skeleton loader (taste-skill: skeletal loaders matching layout shape) ─── */
+  .skeleton {
+    background: var(--color-surface-700);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255,255,255,0.5) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* ─── Stagger de entrada en listas (emil-design-eng: cascade delay 30-80ms) ─── */
+  .stagger-item {
+    animation: fadeSlideIn 300ms var(--ease-out-strong) both;
+  }
+  .stagger-item:nth-child(1) { animation-delay:   0ms; }
+  .stagger-item:nth-child(2) { animation-delay:  40ms; }
+  .stagger-item:nth-child(3) { animation-delay:  80ms; }
+  .stagger-item:nth-child(4) { animation-delay: 120ms; }
+  .stagger-item:nth-child(5) { animation-delay: 160ms; }
+  .stagger-item:nth-child(6) { animation-delay: 200ms; }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Página contenedor ─── */
+  .page-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--color-surface-700);
+  }
+  .page-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+  }
+  .page-subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-top: 0.25rem;
+  }
+}
+
+/* ─── prefers-reduced-motion (obligatorio — emil-design-eng + taste-skill) ─── */
+@media (prefers-reduced-motion: reduce) {
+  .spinner         { animation-duration: 1s; }
+  .modal-overlay   { animation: none; }
+  .modal-panel     { animation: none; }
+  .stagger-item    { animation: none; }
+  .skeleton::after { animation: none; }
+  .btn             { transition: background-color 100ms ease, color 100ms ease; }
+  .nav-item        { transition: background-color 100ms ease; }
+  .alert-item:hover { transform: none; }
+  .stat-card:hover  { transform: none; }
+}
